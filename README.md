@@ -1,4 +1,6 @@
-# cover-core
+# cover-core-v1
+## Design
+![cover core design](https://github.com/COVERProtocol/cover-core-v1/blob/main/cover_core_v1_design.jpg)
 
 ## Developement
 * `npm install` install dependencies
