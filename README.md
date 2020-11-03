@@ -1,6 +1,4 @@
 # cover-core-v1
-## Design
-![cover core design](https://github.com/COVERProtocol/cover-core-v1/blob/main/cover_core_v1_design.jpg)
 
 ## Developement
 * `npm install` install dependencies
@@ -23,3 +21,6 @@
 ## Deploy to Your Local Hardhat Node
 * Add required env vars into your `./.env` file. Set `COVER_TEST_ADDRESS` to the address your want to use as treasury and governance
 * Run `npx hardhat run scripts/frontend-testing.js --network localhost`
+
+## Design
+![cover core design](https://github.com/COVERProtocol/cover-core-v1/blob/main/cover_core_v1_design.jpg)
