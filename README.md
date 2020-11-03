@@ -18,7 +18,7 @@
 * Run `ganache-cli` to setup a local blockchain emulator.
 * `npx hardhat test --network localhost` run tests in a new terminal.
 
-## Deploy to Your Local Hardhat Node
+### Deploy to Your Local Hardhat Node
 * Add required env vars into your `./.env` file. Set `COVER_TEST_ADDRESS` to the address your want to use as treasury and governance
 * Run `npx hardhat run scripts/frontend-testing.js --network localhost`
 
