@@ -1,0 +1,12 @@
+
+#Buidler files
+cache
+artifacts
+
+# Misc
+.vscode
+Close
+.env
+*.DS_Store
+
+deployment
