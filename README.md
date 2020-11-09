@@ -1,5 +1,15 @@
 # cover-core-v1
 
+## Contracts on Mainnet
+* Protocol Factory: [0x45D619A4804B82c3af4c24Ccb460068a8A0D8D6a](https://etherscan.io/address/0x45D619A4804B82c3af4c24Ccb460068a8A0D8D6a#code)
+* Protocol Implementation: [0xcC3B67F3AC058E376E839567a3B6e9f0D62Df74D](https://etherscan.io/address/0xcC3B67F3AC058E376E839567a3B6e9f0D62Df74D#code)
+* Cover Implementation: [0x1349c51B28772F725e193c21597C0a41A715D504](https://etherscan.io/address/0x1349c51B28772F725e193c21597C0a41A715D504#code)
+* covToken Implementation: [0xD84FDb46420a21dF9d4C14f6dD0c5881Ca052942](https://etherscan.io/address/0xD84FDb46420a21dF9d4C14f6dD0c5881Ca052942#code)
+* ClaimManagement: [0xF52B078B3Db7e2253a803f09F1a2EEE0412c9aC2](https://etherscan.io/address/0xF52B078B3Db7e2253a803f09F1a2EEE0412c9aC2#code)
+
+## Design
+![cover core design](https://github.com/COVERProtocol/cover-core-v1/blob/main/cover_core_v1_design.jpg)
+
 ## Developement
 * `npm install` install dependencies
 * `npx hardhat compile` compile
@@ -21,6 +31,3 @@
 ### Deploy to Your Local Hardhat Node
 * Add required env vars into your `./.env` file. Set `COVER_TEST_ADDRESS` to the address your want to use as treasury and governance
 * Run `npx hardhat run scripts/frontend-testing.js --network localhost`
-
-## Design
-![cover core design](https://github.com/COVERProtocol/cover-core-v1/blob/main/cover_core_v1_design.jpg)
