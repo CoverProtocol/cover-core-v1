@@ -192,7 +192,7 @@ contract Protocol is IProtocol, Initializable, ReentrancyGuard, Ownable {
       address coverImplementation = IProtocolFactory(owner()).coverImplementation();
       InitializableAdminUpgradeabilityProxy(payable(addr)).initialize(
         coverImplementation,
-        IProtocolFactory(owner()).governance(),
+        IOwnable(owner()).owner(),
         initData
       );
 
@@ -203,7 +203,7 @@ contract Protocol is IProtocol, Initializable, ReentrancyGuard, Ownable {
 
     // move collateral to the cover contract and mint CovTokens to sender
     uint256 coverBalanceBefore = collateral.balanceOf(addr);
-    collateral.transferFrom(msg.sender, addr, _amount);
+    collateral.safeTransferFrom(msg.sender, addr, _amount);
     uint256 coverBalanceAfter = collateral.balanceOf(addr);
     require(coverBalanceAfter > coverBalanceBefore, "COVER: collateral transfer failed");
     ICover(addr).mint(coverBalanceAfter.sub(coverBalanceBefore), msg.sender);
@@ -265,7 +265,7 @@ contract Protocol is IProtocol, Initializable, ReentrancyGuard, Ownable {
       _incidentTimestamp,
       uint48(block.timestamp)
     ));
-    emit ClaimAccepted(claimNonce);
+    emit ClaimAccepted(_protocolNonce);
     return true;
   }
 
