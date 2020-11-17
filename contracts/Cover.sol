@@ -6,6 +6,7 @@ import "./proxy/InitializableAdminUpgradeabilityProxy.sol";
 import "./utils/Create2.sol";
 import "./utils/Initializable.sol";
 import "./utils/Ownable.sol";
+import "./utils/ReentrancyGuard.sol";
 import "./utils/SafeMath.sol";
 import "./utils/SafeERC20.sol";
 import "./interfaces/ICover.sol";
@@ -24,7 +25,7 @@ import "./interfaces/IProtocolFactory.sol";
  *  - Mints and burns CovTokens (CoverERC20)
  *  - Allows redeem from collateral pool with or without an accepted claim
  */
-contract Cover is ICover, Initializable, Ownable {
+contract Cover is ICover, Initializable, Ownable, ReentrancyGuard {
   using SafeMath for uint256;
   using SafeERC20 for IERC20;
 
@@ -176,7 +177,7 @@ contract Cover is ICover, Initializable, Ownable {
   }
 
   /// @notice transfer collateral (amount - fee) from this contract to recevier, transfer fee to COVER treasury
-  function _payCollateral(address _receiver, uint256 _amount) private {
+  function _payCollateral(address _receiver, uint256 _amount) private nonReentrant {
     IProtocolFactory factory = IProtocolFactory(_factory());
     uint256 redeemFeeNumerator = factory.redeemFeeNumerator();
     uint256 redeemFeeDenominator = factory.redeemFeeDenominator();
@@ -184,8 +185,8 @@ contract Cover is ICover, Initializable, Ownable {
     address treasury = factory.treasury();
     IERC20 collateralToken = IERC20(collateral);
 
-    collateralToken.transfer(_receiver, _amount.sub(fee));
-    collateralToken.transfer(treasury, fee);
+    collateralToken.safeTransfer(_receiver, _amount.sub(fee));
+    collateralToken.safeTransfer(treasury, fee);
   }
 
   /// @notice burn covToken and pay sender
@@ -216,7 +217,7 @@ contract Cover is ICover, Initializable, Ownable {
     address coverERC20Implementation = IProtocolFactory(_factory()).coverERC20Implementation();
     InitializableAdminUpgradeabilityProxy(proxyAddr).initialize(
       coverERC20Implementation,
-      IProtocolFactory(_factory()).governance(),
+      IOwnable(_factory()).owner(),
       initData
     );
 
