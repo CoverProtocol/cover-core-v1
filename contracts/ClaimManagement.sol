@@ -6,12 +6,14 @@ import "./ClaimConfig.sol";
 import "./interfaces/IProtocol.sol";
 import "./interfaces/IProtocolFactory.sol";
 import "./interfaces/IClaimManagement.sol";
+import "./utils/SafeERC20.sol";
 
 /**
  * @title Claim Management for claims filed for a COVER supported protocol
  * @author Alan
  */
 contract ClaimManagement is IClaimManagement, ClaimConfig {
+    using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
     // protocol => nonce => Claim[]
@@ -89,7 +91,7 @@ contract ClaimManagement is IClaimManagement, ClaimConfig {
             decidedTimestamp: 0,
             feePaid: claimFee
         }));
-        feeCurrency.transferFrom(msg.sender, address(this), claimFee);
+        feeCurrency.safeTransferFrom(msg.sender, address(this), claimFee);
         _updateProtocolClaimFee(_protocol);
         emit ClaimFiled({
             isForced: false,
@@ -138,7 +140,7 @@ contract ClaimManagement is IClaimManagement, ClaimConfig {
             decidedTimestamp: 0,
             feePaid: forceClaimFee
         }));
-        feeCurrency.transferFrom(msg.sender, address(this), forceClaimFee);
+        feeCurrency.safeTransferFrom(msg.sender, address(this), forceClaimFee);
         emit ClaimFiled({
             isForced: true,
             filedBy: msg.sender,
@@ -178,7 +180,7 @@ contract ClaimManagement is IClaimManagement, ClaimConfig {
         } else {
             claim.state = ClaimState.Invalidated;
             claim.decidedTimestamp = uint48(block.timestamp);
-            feeCurrency.transfer(treasury, claim.feePaid);
+            feeCurrency.safeTransfer(treasury, claim.feePaid);
         }
         emit ClaimValidated({
             claimIsValid: _claimIsValid,
@@ -247,13 +249,13 @@ contract ClaimManagement is IClaimManagement, ClaimConfig {
             claim.state = ClaimState.Accepted;
             claim.payoutNumerator = _payoutNumerator;
             claim.payoutDenominator = _payoutDenominator;
-            feeCurrency.transfer(claim.filedBy, claim.feePaid);
+            feeCurrency.safeTransfer(claim.filedBy, claim.feePaid);
             _resetProtocolClaimFee(_protocol);
             IProtocol(_protocol).enactClaim(_payoutNumerator, _payoutDenominator, claim.incidentTimestamp, _nonce);
         } else {
             require(_payoutNumerator == 0, "COVER_CM: claim denied (default if passed window), but payoutNumerator != 0");
             claim.state = ClaimState.Denied;
-            feeCurrency.transfer(treasury, claim.feePaid);
+            feeCurrency.safeTransfer(treasury, claim.feePaid);
         }
         claim.decidedTimestamp = uint48(block.timestamp);
         emit ClaimDecided({
@@ -334,4 +336,4 @@ contract ClaimManagement is IClaimManagement, ClaimConfig {
     function _isDecisionWindowPassed(Claim memory claim) private view returns (bool) {
         return block.timestamp.sub(claim.filedTimestamp) > maxClaimDecisionWindow.sub(1 hours);
     }
-}
+} 
