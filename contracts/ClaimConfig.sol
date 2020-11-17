@@ -49,7 +49,7 @@ contract ClaimConfig is IClaimConfig, Ownable {
     /**
      * @notice Set the address of treasury
      */
-    function setTreasury(address _treasury) external override onlyGovernance {
+    function setTreasury(address _treasury) external override onlyOwner {
         require(_treasury != address(0), "COVER_CC: treasury cannot be 0");
         treasury = _treasury;
     }
@@ -57,7 +57,7 @@ contract ClaimConfig is IClaimConfig, Ownable {
     /**
      * @notice Set max time window allowed to decide a claim after filed, requires at least 3 days for voting
      */
-    function setMaxClaimDecisionWindow(uint256 _newTimeWindow) external override onlyGovernance {
+    function setMaxClaimDecisionWindow(uint256 _newTimeWindow) external override onlyOwner {
         require(_newTimeWindow < 3 days, "COVER_CC: window too short");
         maxClaimDecisionWindow = _newTimeWindow;
     }
@@ -65,14 +65,14 @@ contract ClaimConfig is IClaimConfig, Ownable {
     /**
      * @notice Set the status and address of auditor
      */
-    function setAuditor(address _auditor) external override onlyGovernance {
+    function setAuditor(address _auditor) external override onlyOwner {
         auditor = _auditor;
     }
 
     /**
      * @notice Set the status of allowing partial claims
      */
-    function setPartialClaimStatus(bool _allowPartialClaim) external override onlyGovernance {
+    function setPartialClaimStatus(bool _allowPartialClaim) external override onlyOwner {
         allowPartialClaim = _allowPartialClaim;
     }
 
