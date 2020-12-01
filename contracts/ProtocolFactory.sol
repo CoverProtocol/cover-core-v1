@@ -140,8 +140,7 @@ contract ProtocolFactory is IProtocolFactory, Ownable {
     emit ProtocolInitiation(proxyAddr);
 
     bytes memory initData = abi.encodeWithSelector(PROTOCOL_INIT_SIGNITURE, _name, _active, _collateral, _timestamps, _timestampNames);
-    // governance will be the admin for the protocol contracts
-    InitializableAdminUpgradeabilityProxy(proxyAddr).initialize(protocolImplementation, governance, initData);
+    InitializableAdminUpgradeabilityProxy(proxyAddr).initialize(protocolImplementation, owner(), initData);
 
     protocols[_name] = proxyAddr;
 
@@ -187,18 +186,8 @@ contract ProtocolFactory is IProtocolFactory, Ownable {
     return true;
   }
 
-  /// @dev called once and only by dev to set the claimManager for the first time
-  function assignClaimManager(address _address)
-   external override onlyOwner returns (bool)
-  {
-    require(_address != address(0), "COVER: address cannot be 0");
-    require(claimManager == address(0), "COVER: claimManager is assigned");
-    claimManager = _address;
-    return true;
-  }
-
   function updateClaimManager(address _address)
-   external override onlyGovernance returns (bool)
+   external override onlyOwner returns (bool)
   {
     require(_address != address(0), "COVER: address cannot be 0");
     claimManager = _address;
@@ -215,7 +204,7 @@ contract ProtocolFactory is IProtocolFactory, Ownable {
   }
 
   function updateTreasury(address _address)
-   external override onlyGovernance returns (bool)
+   external override onlyOwner returns (bool)
   {
     require(_address != address(0), "COVER: address cannot be 0");
     treasury = _address;
